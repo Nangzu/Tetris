@@ -77,26 +77,26 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 //        }
 //    }
 
-	public void playSound() {
-		try {
-	        // 오디오 파일 경로 설정 (여기에서는 "effect/bottom.wav" 파일을 사용)
-	        AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResource("effect/bottom.wav"));
-	        
-	        // 클립 생성
-	        Clip audioClip = AudioSystem.getClip();
-	        
-	        // 클립에 오디오 스트림 열기
-	        audioClip.open(audioStream);
-	        
-	        // 소리 재생 위치를 처음으로 리셋
-	        audioClip.setFramePosition(0);
-	        
-	        // 소리 재생
-	        audioClip.start();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-    }
+//	public void playSound() {
+//		try {
+//	        // 오디오 파일 경로 설정 (여기에서는 "effect/bottom.wav" 파일을 사용)
+//	        AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResource("effect/bottom.wav"));
+//	        
+//	        // 클립 생성
+//	        Clip audioClip = AudioSystem.getClip();
+//	        
+//	        // 클립에 오디오 스트림 열기
+//	        audioClip.open(audioStream);
+//	        
+//	        // 소리 재생 위치를 처음으로 리셋
+//	        audioClip.setFramePosition(0);
+//	        
+//	        // 소리 재생
+//	        audioClip.start();
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	    }
+//    }
 	
 	public void setTetrisPreview(TetrisPreview preview) {
 		this.preview = preview;
@@ -383,7 +383,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	public void blockset() {
 		while(!current.moveDown()) {
 		}
-		playSound();
+		//playSound();
 		makeNew = true;
 		if (current.copy()) {
 			stop();
