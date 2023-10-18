@@ -56,7 +56,7 @@ public class TetrisData {
 						data[0][y] = 0;
 					}
 				}
-				i++; // 추가
+				i++; // 지워질 라인이 두줄 이상일때 맨 아랫줄 윗칸이 지워지지 않는 버그 수정
 				score+=100;
 				levelup();
 
