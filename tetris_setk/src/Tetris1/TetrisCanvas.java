@@ -227,7 +227,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		bufferGraphics.drawString("지운 줄 : " + data.getLine(), 190, 525);
 		
 		bufferGraphics.setColor(Color.black);
-		bufferGraphics.drawString("난이도 : " + Constant.level, 190, 545);
+		bufferGraphics.drawString("난이도 : " + Constant.level+"/10", 190, 545);
 		
 		//가상버퍼(이미지)를 원본 버퍼에 복사
 		g.drawImage(offscreen,0,0,this);

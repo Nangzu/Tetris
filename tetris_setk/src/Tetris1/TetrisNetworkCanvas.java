@@ -16,6 +16,7 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 	protected TetrisData data;
 	protected boolean stop, makeNew;
 	protected Piece   current;
+
 	
 	//그래픽스 함수를 사용하기 위한 클래스
 	private Graphics bufferGraphics = null;
@@ -80,6 +81,11 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 		bufferGraphics.drawString("현재 점수 : " + data.score, 10, 525);
 		bufferGraphics.setColor(Color.black);
 		bufferGraphics.drawString("지운 줄 : " + data.getLine(), 190, 525);
+//		bufferGraphics.setColor(Color.black);
+//		bufferGraphics.drawString("난이도 : " + constant.level, 190, 545);
+//		
+		
+		
 		
 		if(current != null){
 			for(int i = 0; i < 4; i++) {

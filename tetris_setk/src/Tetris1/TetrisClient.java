@@ -28,7 +28,7 @@ public class TetrisClient extends Thread {
     	this.netPreview = netPreview;
     	this.host = host;
     	this.port = port;
-    	
+    
     	// 상대방 세이브 도형 임의 데이터 입력
     	save = new Bar(new TetrisData());
     	
@@ -43,12 +43,14 @@ public class TetrisClient extends Thread {
 		System.out.println("send: "+data);
 		String current = tetrisCanvas.current.extracter();
 		int score = tetrisCanvas.getData().score;// 추가
+		int line = tetrisCanvas.getData().line;
 		String save_s;//추가
+		//String level_s = Constant.getLevel(); //상대방 레벨 보이기
 		if(tetrisCanvas.save != null) {// 추가
 			save_s = tetrisCanvas.save.extracter();
-			o.println(key+data+";"+newBlock+";"+current+";"+score+";"+save_s);
+			o.println(key+data+";"+newBlock+";"+current+";"+score+";"+line+";"+save_s);
 		} else {
-			o.println(key+data+";"+newBlock+";"+current+";"+score);
+			o.println(key+data+";"+newBlock+";"+current+";"+score+";"+line);
 		}
     }
     
@@ -103,9 +105,13 @@ public class TetrisClient extends Thread {
 						
 						//score 받음
 						netCanvas.data.score=Integer.parseInt(parsedData[4]);
+						//상대방 레벨 보이기
+						//Constant.level=(parsedData[5]);
+						// 상대방 지운 라인 보이기
+						netCanvas.data.line=Integer.parseInt(parsedData[5]);
 						
-						if(parsedData.length == 6) { // 세이브 도형 받음
-							save.combinator(parsedData[5]);
+						if(parsedData.length == 7) { // 세이브 도형 받음
+							save.combinator(parsedData[6]);
 							netPreview.setNetSaveBlock(save);
 						}
 						//netPreview.setNetSaveBlock(tmp);
