@@ -41,13 +41,13 @@ public class TetrisClient extends Thread {
     	String data = tetrisCanvas.getData().saveNetworkData();
     	int newBlock = tetrisCanvas.getNewBlock().getType();
 		System.out.println("send: "+data);
-		String current = tetrisCanvas.current.extracter();
+		String current = tetrisCanvas.current.dataToString();
 		int score = tetrisCanvas.getData().score;// 추가
 		int line = tetrisCanvas.getData().line;
 		String save_s;//추가
 		//String level_s = Constant.getLevel(); //상대방 레벨 보이기
 		if(tetrisCanvas.save != null) {// 추가
-			save_s = tetrisCanvas.save.extracter();
+			save_s = tetrisCanvas.save.dataToString();
 			o.println(key+data+";"+newBlock+";"+current+";"+score+";"+line+";"+save_s);
 		} else {
 			o.println(key+data+";"+newBlock+";"+current+";"+score+";"+line);
@@ -100,7 +100,7 @@ public class TetrisClient extends Thread {
 							break;
 						}
 						Piece tmpP = new Bar(new TetrisData());
-						tmpP.combinator(parsedData[3]);
+						tmpP.stringToData(parsedData[3]);
 						netCanvas.setCurrent(tmpP);
 						
 						//score 받음
@@ -111,7 +111,7 @@ public class TetrisClient extends Thread {
 						netCanvas.data.line=Integer.parseInt(parsedData[5]);
 						
 						if(parsedData.length == 7) { // 세이브 도형 받음
-							save.combinator(parsedData[6]);
+							save.stringToData(parsedData[6]);
 							netPreview.setNetSaveBlock(save);
 						}
 						//netPreview.setNetSaveBlock(tmp);

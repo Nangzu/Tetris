@@ -181,9 +181,9 @@ public abstract class Piece implements Serializable {
 	        center.x = currentX;
 	        
 	    }
-	    checkDisplacement(currentR, currentC);
+	    checkDis(currentR, currentC);
 	}
-	private void checkDisplacement(int[] tempR, int[] tempC) {
+	private void checkDis(int[] tempR, int[] tempC) {
 	    int minX = getMinX();
 	    int maxX = getMaxX();
 	    int minY = getMinY();
@@ -261,7 +261,7 @@ public abstract class Piece implements Serializable {
 	
 	
 	
-	public String extracter() {
+	public String dataToString() {
 		String str =
 		r[0] + "." + r[1] + "." + r[2] + "." + r[3] + "." +
 		c[0] + "." + c[1] + "." + c[2] + "." + c[3] + "." +
@@ -272,7 +272,7 @@ public abstract class Piece implements Serializable {
 		return str;
 	}
 	
-	public void combinator(String str) {
+	public void stringToData(String str) {
 		String[] fixedStr = str.split("\\.");
 		for(int i = 0; i < 11; i++) {
 			switch(i/4) {
