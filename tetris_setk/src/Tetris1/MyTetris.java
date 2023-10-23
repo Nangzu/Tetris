@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import javax.swing.JColorChooser;
+import java.awt.Color;
 
 import java.io.File; //
 
@@ -147,43 +149,86 @@ public class MyTetris extends JFrame{
 		
 		JMenuItem setGhostBlock = new JMenuItem("고스트블럭 색 설정");
 		optionMenu.add(setGhostBlock);
-		JMenuItem setTema = new JMenuItem("테트리스 테마 설정");
-		optionMenu.add(setTema);
-		
+		JMenuItem setTheme = new JMenuItem("테트리스 테마 설정");
+		optionMenu.add(setTheme);
+//		JMenuItem setBackgroundColorItem = new JMenuItem("배경색 설정");
+//		optionMenu.add(setBackgroundColorItem);
+//		JMenuItem setShapeColorItem = new JMenuItem("도형 색상 설정");
+//		optionMenu.add(setShapeColorItem);
+//		
 		
 		//고스트블럭 설정할 
-		/*setGhostBlock.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				ServerDialog dialog = new ServerDialog();
-				dialog.setVisible(true);
-				if(dialog.userChoice == ServerDialog.Choice.OK)
-				{
-					TetrisServer server = new TetrisServer(dialog.getPortNumber());
-					server.start();	
-					serverItem.setEnabled(false);
-				}
-			}
+		setGhostBlock.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // 사용자에게 색상을 선택하도록 다이얼로그 표시
+		        Color selectedColor = JColorChooser.showDialog(MyTetris.this, "고스트 블록 색상 선택", tetrisCanvas.getGhostBlockColor());
+
+		        // 사용자가 색상을 선택하지 않고 취소한 경우, 선택된 색상이 null이 될 수 있음
+		        if (selectedColor != null) {
+		            // 선택한 색상을 TetrisCanvas로 전달하여 설정
+		            tetrisCanvas.setGhostBlockColor(selectedColor);
+		        }
+		    }
 		});
 		
-		setTema.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				ServerDialog dialog = new ServerDialog();
-				dialog.setVisible(true);
-				if(dialog.userChoice == ServerDialog.Choice.OK)
-				{
-					TetrisServer server = new TetrisServer(dialog.getPortNumber());
-					server.start();	
-					serverItem.setEnabled(false);
-				}
-			}
-		});*/
+		setTheme.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // 테마 설정 다이얼로그를 표시
+		        ThemeDialog themeDialog = new ThemeDialog(MyTetris.this);
+		        themeDialog.setVisible(true);
+
+		        // 사용자가 테마를 설정하고 확인 버튼을 클릭한 경우, 색상을 가져와 테마를 변경
+		        if (themeDialog.getChoice() == ThemeDialog.Choice.OK) {
+		            Color backgroundColor = themeDialog.getBackgroundColor();
+		            Color shapeColor = themeDialog.getShapeColor();
+
+		            // TetrisCanvas의 배경색 및 도형 색상 설정
+		            tetrisCanvas.setBackground(backgroundColor);
+		           // tetrisCanvas.getNewBlock().setColor(shapeColor);
+
+		            // 여기에서 줄의 색상 및 다른 구성 요소의 테마 설정을 추가
+		            // 예: tetrisCanvas.getData().setLineColor(lineColor);
+
+		            // 변경된 테마를 TetrisCanvas에 반영
+		            tetrisCanvas.repaint();
+		        }
+		    }
+		});
+
+//		setBackgroundColorItem.addActionListener(new ActionListener() {
+//		    @Override
+//		    public void actionPerformed(ActionEvent e) {
+//		        // 여기에 배경색 설정 다이얼로그를 띄우고 사용자에게 배경색 설정을 가능하게 하는 코드를 추가
+//		        // 예를 들어, 다이얼로그에서 배경색을 선택하고 선택한 색상을 적용하는 코드를 추가
+//		    }
+//		});
+//
+//		setShapeColorItem.addActionListener(new ActionListener() {
+//		    @Override
+//		    public void actionPerformed(ActionEvent e) {
+//		        // 여기에 도형 색상 설정 다이얼로그를 띄우고 사용자에게 도형 색상 설정을 가능하게 하는 코드를 추가
+//		        // 예를 들어, 다이얼로그에서 도형 색상을 선택하고 선택한 색상을 적용하는 코드를 추가
+//		    }
+//		});
 		
+//		setTema.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				
+//				ServerDialog dialog = new ServerDialog
+//				dialog.setVisible(true);
+//				if(dialog.userChoice == ServerDialog.Choice.OK)
+//				{
+//					TetrisServer server = new TetrisServer(dialog.getPortNumber());
+//					server.start();	
+//					serverItem.setEnabled(false);
+//				}
+//			}
+//		});
+//		
 		
 		
 	}

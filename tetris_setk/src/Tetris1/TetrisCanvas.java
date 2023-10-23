@@ -40,7 +40,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	private static final long serialVersionUID = 1L;
 	protected Thread worker;
 	protected TetrisData data;
-	protected Piece   current;
+	protected Piece   current ;
 	protected Piece newBlock;
 	protected Piece PieceGhost;
 	protected Piece save;
@@ -57,6 +57,12 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	private Dimension dim;
 	private TetrisPreview preview;
 	private MyTetris myTetris;
+	private Color ghostBlockColor = Color.gray; // 기본값은 회색
+	//private Color currentB = Constant.getColor(current.getType()); // 기본 도형 색
+	private ThemeDialog themeDialog;
+	private Color backgroundColor = Color.white;
+	private Color shapeColor ;
+	
 	// 효과음
 	
 	public TetrisCanvas(MyTetris t) {
@@ -64,6 +70,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		data = new TetrisData();
 		addKeyListener(this);		
 		addComponentListener(this);
+
 	}
 	
 		
@@ -181,13 +188,16 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	public void paint(Graphics g) {
 
 		//화면을 지운다. 지우지 않으면 이전그림이 그대로 남아 잔상이 생김
+//		bufferGraphics.setColor(backgroundColor);
+//		bufferGraphics.fillRect(0, 0, dim.width, dim.height);
 		bufferGraphics.clearRect(0,0,dim.width,dim.height); 
 		
 		//쌓인 조각들 그리기
 		for(int i = 0; i < TetrisData.ROW; i++) {
+			
 			for(int k = 0; k < TetrisData.COL; k++) {
 				if(data.getAt(i, k) == 0) {
-					bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					bufferGraphics.setColor(Color.black/*Constant.getColor(data.getAt(i, k))*/);
 					bufferGraphics.draw3DRect(Constant.margin/2 + Constant.w * k,
 							Constant.margin/2 + Constant.w * i, Constant.w, Constant.w, true);
 				} else {
@@ -199,8 +209,9 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		}
 		//도형 고스트
 		if(PieceGhost != null) {
+			bufferGraphics.setColor(ghostBlockColor);
 			for(int i = 0; i < 4; i++) {
-				bufferGraphics.setColor(Color.gray);
+//				bufferGraphics.setColor(Color.gray);
 				bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * (PieceGhost.getX()+PieceGhost.c[i]), 
 						Constant.margin/2 + Constant.w * (PieceGhost.getY()+PieceGhost.r[i]), 
 						Constant.w, Constant.w, true);
@@ -210,7 +221,9 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		
 		// 현재 내려오고 있는 테트리스 조각 그리
 		if(current != null){
+			
 			for(int i = 0; i < 4; i++) {
+			//	shapeColor = Constant.getColor(current.getType());
 				bufferGraphics.setColor(Constant.getColor(current.getType()));
 				bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * (current.getX()+current.c[i]), 
 						Constant.margin/2 + Constant.w * (current.getY()+current.r[i]), 
@@ -360,11 +373,11 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 				//  아래 방향키를 눌렀을 때
 				current=null;
 				PieceGhost=null;
-				data.removeLines();
+				data.removeLines(); // 아래 키 꾹 눌렀을 때 지워지지 않는 버그 수정
 				savePiece = true;
 				worker.interrupt();
 				
-			}
+			}	
 			repaint();
 			
 			
@@ -432,6 +445,27 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		return newBlock;
 	}
 	
+	public void setGhostBlockColor(Color color) {
+		this.ghostBlockColor=color;
+		repaint();
+	}
+	
+	public Color getGhostBlockColor() {
+		return ghostBlockColor;
+	}
+	
+	public void setBackgroundColor(Color backgroundColor) {
+	    this.backgroundColor = backgroundColor;
+	    // 배경색을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+
+	public void setShapeColor(Color shapeColor) {
+	    this.shapeColor = shapeColor;
+	    // 도형 색상을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+
 	@Override
 	public void keyReleased(KeyEvent e) { }
 	

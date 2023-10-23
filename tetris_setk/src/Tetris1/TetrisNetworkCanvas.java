@@ -14,7 +14,8 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 	private static final long serialVersionUID = 1L;
 	protected Thread worker;
 	protected TetrisData data;
-	protected boolean stop, makeNew;
+	protected boolean stop;
+	protected boolean makeNew;
 	protected Piece   current;
 
 	
