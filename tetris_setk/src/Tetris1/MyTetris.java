@@ -42,7 +42,7 @@ public class MyTetris extends JFrame{
 	
 	public MyTetris() {
 		setTitle("테트리스");
-		setSize(275*4, 650);
+		setSize(1280, 650);
 		
 		
 		
@@ -64,7 +64,7 @@ public class MyTetris extends JFrame{
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
+		//pack();
 		setVisible(true);
 		
 		Timer musicTimer = new Timer(30000, new ActionListener() {
@@ -162,14 +162,22 @@ public class MyTetris extends JFrame{
 		setGhostBlock.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        // 사용자에게 색상을 선택하도록 다이얼로그 표시
-		        Color selectedColor = JColorChooser.showDialog(MyTetris.this, "고스트 블록 색상 선택", tetrisCanvas.getGhostBlockColor());
-
-		        // 사용자가 색상을 선택하지 않고 취소한 경우, 선택된 색상이 null이 될 수 있음
-		        if (selectedColor != null) {
-		            // 선택한 색상을 TetrisCanvas로 전달하여 설정
-		            tetrisCanvas.setGhostBlockColor(selectedColor);
-		        }
+		    	GhostDialog ghostDialog = new GhostDialog(MyTetris.this, tetrisCanvas);
+		    	ghostDialog.setVisible(true);
+		    	
+		    	if(ghostDialog.getChoice()==GhostDialog.Choice.OK) {
+		    		Color ghostBlockColor = ghostDialog.getGhostBlockColor();
+		    	}
+		    	
+		    	
+//		        // 사용자에게 색상을 선택하도록 다이얼로그 표시
+//		        Color selectedColor = JColorChooser.showDialog(MyTetris.this, "고스트 블록 색상 선택", tetrisCanvas.getGhostBlockColor());
+//
+//		        // 사용자가 색상을 선택하지 않고 취소한 경우, 선택된 색상이 null이 될 수 있음
+//		        if (selectedColor != null) {
+//		            // 선택한 색상을 TetrisCanvas로 전달하여 설정
+//		            tetrisCanvas.setGhostBlockColor(selectedColor);
+//		        }
 		    }
 		});
 		

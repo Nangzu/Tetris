@@ -34,12 +34,23 @@ public class TetrisNetworkPreview extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+		if(backgroundColor != null) {
+			g.setColor(backgroundColor);
+		} else {
+			g.setColor(new Color(238, 238, 238));
+		}
+		g.fillRect(0, 0, 3000,2000 );
 		
 		//쌓인 조각들 그리기
 		for(int i = 0; i < 4; i++) {
 			for(int k = 0; k < 4; k++) {
 				if(data.getAt(i, k) == 0) {
-					g.setColor(Constant.getColor(0));
+					if(canvasColor != null) {
+						g.setColor(canvasColor);
+					} else {
+						g.setColor(Color.black);
+					}
+					//g.setColor(Constant.getColor(0));
 					g.draw3DRect(Constant.margin/2 + Constant.w * k,
 							Constant.margin/2 + Constant.w * i, 
 							Constant.w, Constant.w, true);
@@ -50,7 +61,12 @@ public class TetrisNetworkPreview extends JPanel {
 		// 현재 내려오고 있는 테트리스 조각 그리
 		if(newBlock != null){
 			for(int i = 0; i < 4; i++) {
-				g.setColor(Constant.getColor(newBlock.getType()));
+				if(shapeColor != null) {
+					g.setColor(shapeColor);
+				} else {
+					g.setColor(Constant.getColor(newBlock.getType()));
+				}
+				//g.setColor(Constant.getColor(newBlock.getType()));
 				g.fill3DRect(Constant.margin/2 + Constant.w * (2+newBlock.c[i]), 
 						Constant.margin/2 + Constant.w * (2+newBlock.r[i]), 
 						Constant.w, Constant.w, true);
@@ -61,7 +77,13 @@ public class TetrisNetworkPreview extends JPanel {
 		for(int i = 0; i < 4; i++) {
 			for(int k = 0; k < 4; k++) {
 				if(data.getAt(i, k) == 0) {
-					g.setColor(Constant.getColor(0));
+					if(canvasColor != null) {
+						g.setColor(canvasColor);
+						repaint();
+					} else {
+						g.setColor(Color.black);
+					}
+					//g.setColor(Constant.getColor(0));
 					g.draw3DRect(Constant.margin/2 + Constant.w * k,
 							Constant.margin/2 + Constant.w * i+250, 
 							Constant.w, Constant.w, true);
@@ -71,7 +93,12 @@ public class TetrisNetworkPreview extends JPanel {
 		// 세이브 도형 
 		if(save != null){
 			for(int i = 0; i < 4; i++) {
-				g.setColor(Constant.getColor(save.getType()));
+				if(shapeColor != null) {
+					g.setColor(shapeColor);
+				} else {
+					g.setColor(Constant.getColor(save.getType()));
+				}
+			//	g.setColor(Constant.getColor(save.getType()));
 				g.fill3DRect(Constant.margin/2 + Constant.w * (2+save.c[i]), 
 						Constant.margin/2 + Constant.w * (2+save.r[i])+250, 
 						Constant.w, Constant.w, true);
@@ -95,5 +122,12 @@ public class TetrisNetworkPreview extends JPanel {
 	public void setcanvasColor(Color canvasColor) {
 		this.canvasColor = canvasColor;
 		repaint();
+	}
+	public void resetTheme(Color backgroundColor,Color shapeColor, Color canvasColor) {
+		this.backgroundColor = null; // 배경색 초기화
+        this.shapeColor = null; // 도형 색상 초기화
+        this. canvasColor = null; // 선 색상 초기화
+        
+        repaint();
 	}
 }

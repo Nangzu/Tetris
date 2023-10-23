@@ -1,4 +1,5 @@
 package Tetris1;
+
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -29,82 +30,57 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.Timer;
+
+import Tetris1.ThemeDialog.Choice;
+
 import javax.swing.JDialog;
 import javax.swing.JButton;
 
-public class ThemeDialog extends JDialog {
+
+public class GhostDialog extends JDialog {
     private Choice userChoice;
     private Color backgroundColor;
     private Color shapeColor;
     private Color canvasColor;
+    private Color ghostBlockColor;
     private TetrisCanvas tetrisCanvas;
-    private TetrisPreview tetrisPreview;
-    private TetrisNetworkCanvas netCanvas;
-    private TetrisNetworkPreview netPreview;
+//    private TetrisPreview tetrisPreview;
+//    private TetrisNetworkCanvas netCanvas;
+//    private TetrisNetworkPreview netPreview;
 
     public enum Choice { OK, CANCEL }
 
-    public ThemeDialog(JFrame parent, TetrisCanvas tetrisCanvas, TetrisPreview tetrisPreview,TetrisNetworkCanvas netCanvas,TetrisNetworkPreview netPreview) {
+    public GhostDialog(JFrame parent, TetrisCanvas tetrisCanvas) {
     	
-        super(parent, "테트리스 테마 설정", true);
+        super(parent, "고스트블럭 색 설정", true);
         this.tetrisCanvas = tetrisCanvas;
-        this.tetrisPreview = tetrisPreview;
-        this.netCanvas =netCanvas;
-        this.netPreview = netPreview;
+//        this.tetrisPreview = tetrisPreview;
+//        this.netCanvas =netCanvas;
+//        this.netPreview = netPreview;
     	userChoice = null;
         setLayout(new FlowLayout());
         
         
 
-        // 배경색 선택 버튼
-        JButton backgroundColorButton = new JButton("배경색 선택");
-        backgroundColorButton.addActionListener(new ActionListener() {
+        // 고스트블럭 색 설정
+        JButton ghostblockColorset = new JButton("고스트블럭 색 설정");
+        ghostblockColorset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                backgroundColor = JColorChooser.showDialog(ThemeDialog.this, "배경색 선택", backgroundColor);
-                tetrisCanvas.setBackgroundColor(backgroundColor); // TetrisCanvas에 배경색 설정
-                tetrisPreview.setBackgroundColor(backgroundColor);
-                netCanvas.setBackgroundColor(backgroundColor);
-                netPreview.setBackgroundColor(backgroundColor);
+            	ghostBlockColor = JColorChooser.showDialog(GhostDialog.this, "배경색 선택", ghostBlockColor);
+                tetrisCanvas.setGhostBlockColor(ghostBlockColor); // TetrisCanvas에 배경색 설정
 
             }
         });
 
-        // 도형 색상 선택 버튼
-        JButton shapeColorButton = new JButton("도형 색상 선택");
-        shapeColorButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shapeColor = JColorChooser.showDialog(ThemeDialog.this, "도형 색상 선택", shapeColor);
-                tetrisCanvas.setShapeColor(shapeColor); // TetrisCanvas에 도형 색상 설정
-                tetrisPreview.setShapeColor(shapeColor);
-                netCanvas.setShapeColor(shapeColor);
-                netPreview.setShapeColor(shapeColor);
-            }
-        });        
-        
-        // 선 색상 선택버튼
-        JButton canvasColorButton = new JButton("선 색상 선택");
-        canvasColorButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	canvasColor = JColorChooser.showDialog(ThemeDialog.this, "선 색상 선택", canvasColor);
-                tetrisCanvas.setcanvasColor(canvasColor); // TetrisCanvas에 도형 색상 설정
-                tetrisPreview.setcanvasColor(canvasColor);
-                netCanvas.setcanvasColor(canvasColor);
-                netPreview.setcanvasColor(canvasColor);
-            }
-        });
 
         // 초기화 버튼
         JButton resetButton = new JButton("초기화");
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tetrisCanvas.resetTheme(backgroundColor,shapeColor,canvasColor); // TetrisCanvas의 테마 초기화
-                tetrisPreview.resetTheme(backgroundColor,shapeColor,canvasColor);
-                netCanvas.resetTheme(backgroundColor,shapeColor,canvasColor);
-                netPreview.resetTheme(backgroundColor,shapeColor,canvasColor);
+                tetrisCanvas.resetghostColor(ghostBlockColor); // TetrisCanvas의 테마 초기화
+
             }
         });
 
@@ -129,9 +105,7 @@ public class ThemeDialog extends JDialog {
         });
 
         // 버튼을 다이얼로그에 추가
-        add(backgroundColorButton);
-        add(shapeColorButton);
-        add(canvasColorButton);
+        add(ghostblockColorset);
         add(resetButton);
         add(okButton);
         add(cancelButton);
@@ -158,4 +132,8 @@ public class ThemeDialog extends JDialog {
     public Color getcanvasColor() {
     	return canvasColor;
     }
-}
+    
+    public Color getGhostBlockColor() {
+    	return ghostBlockColor;
+    }
+   }

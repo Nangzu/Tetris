@@ -225,7 +225,12 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		}
 		//도형 고스트
 		if(PieceGhost != null) {
-			bufferGraphics.setColor(ghostBlockColor);
+		//	bufferGraphics.setColor(ghostBlockColor);
+			if(ghostBlockColor != null) {
+				bufferGraphics.setColor(ghostBlockColor);
+			} else {
+				bufferGraphics.setColor(Color.GRAY);
+			}
 			for(int i = 0; i < 4; i++) {
 //				bufferGraphics.setColor(Color.gray);
 				bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * (PieceGhost.getX()+PieceGhost.c[i]), 
@@ -504,6 +509,21 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	public void setcanvasColor(Color canvasColor) {
 		this.canvasColor = canvasColor;
 		repaint();
+	}
+	
+	public void resetTheme(Color backgroundColor,Color shapeColor, Color canvasColor) {
+	this.backgroundColor = null; // 배경색 초기화
+    this.shapeColor = null; // 도형 색상 초기화
+    this. canvasColor = null; // 선 색상 초기화
+    
+    repaint();
+	}
+	
+	public void resetghostColor(Color ghostBlockColor) {
+	this.ghostBlockColor = null; // 배경색 초기화
+
+    
+    repaint();
 	}
 
 	@Override
