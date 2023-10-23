@@ -17,6 +17,10 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 	protected boolean stop;
 	protected boolean makeNew;
 	protected Piece   current;
+	private ThemeDialog themeDialog;
+	private Color backgroundColor;
+	private Color shapeColor ;
+	private Color canvasColor;
 
 	
 	//그래픽스 함수를 사용하기 위한 클래스
@@ -61,27 +65,55 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 	public void paint(Graphics g) {
 
 		//화면을 지운다. 지우지 않으면 이전그림이 그대로 남아 잔상이 생김
-		bufferGraphics.clearRect(0,0,dim.width,dim.height); 
+	//	bufferGraphics.clearRect(0,0,dim.width,dim.height); 
+		if(backgroundColor != null) {
+			bufferGraphics.setColor(backgroundColor);
+		} else {
+			bufferGraphics.setColor(new Color(238, 238, 238));
+		}
+		bufferGraphics.fillRect(0, 0, dim.width, dim.height);
 		
 		//쌓인 조각들 그리기
 		for(int i = 0; i < TetrisData.ROW; i++) {
 			for(int k = 0; k < TetrisData.COL; k++) {
 				if(data.getAt(i, k) == 0) {
-					bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					if(canvasColor != null) {
+						bufferGraphics.setColor(canvasColor);
+					} else {
+						bufferGraphics.setColor(Color.black);
+					}
+					//bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
 					bufferGraphics.draw3DRect(Constant.margin/2 + Constant.w * k,
 							Constant.margin/2 + Constant.w * i, Constant.w, Constant.w, true);
 				} else {
-					bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					if(shapeColor != null) {
+						bufferGraphics.setColor(shapeColor);
+					} else {
+						bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					}
+				//bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
 					bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * k, 
 							Constant.margin/2 + Constant.w * i, Constant.w, Constant.w, true);
 				}
 			}
 		}
 		
-		bufferGraphics.setColor(Color.black);
+		//bufferGraphics.setColor(Color.black);
+		if(canvasColor != null) {
+			bufferGraphics.setColor(canvasColor);
+		} else {
+			bufferGraphics.setColor(Color.black);
+		}
 		bufferGraphics.drawString("현재 점수 : " + data.score, 10, 525);
-		bufferGraphics.setColor(Color.black);
+		
+		//bufferGraphics.setColor(Color.black);
+		if(canvasColor != null) {
+			bufferGraphics.setColor(canvasColor);
+		} else {
+			bufferGraphics.setColor(Color.black);
+		}
 		bufferGraphics.drawString("지운 줄 : " + data.getLine(), 190, 525);
+		
 //		bufferGraphics.setColor(Color.black);
 //		bufferGraphics.drawString("난이도 : " + constant.level, 190, 545);
 //		
@@ -90,7 +122,12 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 		
 		if(current != null){
 			for(int i = 0; i < 4; i++) {
-				bufferGraphics.setColor(Constant.getColor(current.type));
+				if(shapeColor != null) {
+					bufferGraphics.setColor(shapeColor);
+				} else {
+					bufferGraphics.setColor(Constant.getColor(current.getType()));
+				}
+				//bufferGraphics.setColor(Constant.getColor(current.type));
 				bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * (current.getX()+current.c[i]), 
 						Constant.margin/2 + Constant.w * (current.getY()+current.r[i]), 
 						Constant.w, Constant.w, true);
@@ -128,6 +165,23 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 	public void componentResized(ComponentEvent e) {
 		System.out.println("resize");
 		initBufferd();
+	}
+	
+	public void setBackgroundColor(Color backgroundColor) {
+	    this.backgroundColor = backgroundColor;
+	    // 배경색을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+
+	public void setShapeColor(Color shapeColor) {
+	    this.shapeColor = shapeColor;
+	    // 도형 색상을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+	
+	public void setcanvasColor(Color canvasColor) {
+		this.canvasColor = canvasColor;
+		repaint();
 	}
 	
 	@Override

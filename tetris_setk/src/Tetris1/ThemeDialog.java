@@ -36,14 +36,22 @@ public class ThemeDialog extends JDialog {
     private Choice userChoice;
     private Color backgroundColor;
     private Color shapeColor;
+    private Color canvasColor;
     private TetrisCanvas tetrisCanvas;
+    private TetrisPreview tetrisPreview;
+    private TetrisNetworkCanvas netCanvas;
+    private TetrisNetworkPreview netPreview;
 
     public enum Choice { OK, CANCEL }
 
-    public ThemeDialog(JFrame parent) {
+    public ThemeDialog(JFrame parent, TetrisCanvas tetrisCanvas, TetrisPreview tetrisPreview,TetrisNetworkCanvas netCanvas,TetrisNetworkPreview netPreview) {
     	
         super(parent, "테트리스 테마 설정", true);
-        userChoice = null;
+        this.tetrisCanvas = tetrisCanvas;
+        this.tetrisPreview = tetrisPreview;
+        this.netCanvas =netCanvas;
+        this.netPreview = netPreview;
+    	userChoice = null;
         setLayout(new FlowLayout());
         
         
@@ -55,6 +63,10 @@ public class ThemeDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 backgroundColor = JColorChooser.showDialog(ThemeDialog.this, "배경색 선택", backgroundColor);
                 tetrisCanvas.setBackgroundColor(backgroundColor); // TetrisCanvas에 배경색 설정
+                tetrisPreview.setBackgroundColor(backgroundColor);
+                netCanvas.setBackground(backgroundColor);
+                netPreview.setBackground(backgroundColor);
+
             }
         });
 
@@ -65,6 +77,22 @@ public class ThemeDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 shapeColor = JColorChooser.showDialog(ThemeDialog.this, "도형 색상 선택", shapeColor);
                 tetrisCanvas.setShapeColor(shapeColor); // TetrisCanvas에 도형 색상 설정
+                tetrisPreview.setShapeColor(shapeColor);
+                netCanvas.setShapeColor(shapeColor);
+                netPreview.setShapeColor(shapeColor);
+            }
+        });        
+        
+        // 선 색상 선택버튼
+        JButton canvasColorButton = new JButton("선 색상 선택");
+        canvasColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	canvasColor = JColorChooser.showDialog(ThemeDialog.this, "선 색상 선택", canvasColor);
+                tetrisCanvas.setcanvasColor(canvasColor); // TetrisCanvas에 도형 색상 설정
+                tetrisPreview.setcanvasColor(canvasColor);
+                netCanvas.setcanvasColor(canvasColor);
+                netPreview.setcanvasColor(canvasColor);
             }
         });
 
@@ -91,6 +119,7 @@ public class ThemeDialog extends JDialog {
         // 버튼을 다이얼로그에 추가
         add(backgroundColorButton);
         add(shapeColorButton);
+        add(canvasColorButton);
         add(okButton);
         add(cancelButton);
 
@@ -110,5 +139,9 @@ public class ThemeDialog extends JDialog {
 
     public Color getShapeColor() {
         return shapeColor;
+    }
+    
+    public Color getcanvasColor() {
+    	return canvasColor;
     }
 }

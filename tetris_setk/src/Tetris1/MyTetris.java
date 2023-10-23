@@ -51,10 +51,11 @@ public class MyTetris extends JFrame{
 		setLayout(layout);
 		TetrisCanvas tetrisCanvas = new TetrisCanvas(this);
 		TetrisNetworkCanvas netCanvas = new TetrisNetworkCanvas();
-		createMenu(tetrisCanvas, netCanvas);
+		
 		TetrisPreview preview = new TetrisPreview(tetrisCanvas.getData());
-		netPreview = new TetrisNetworkPreview(netCanvas.getData());
+		TetrisNetworkPreview netPreview = new TetrisNetworkPreview(netCanvas.getData());
 		tetrisCanvas.setTetrisPreview(preview);
+		createMenu(tetrisCanvas, preview ,netCanvas ,netPreview );
 		//netCanvas.setTetrisPreview(netPreview);
 		add(tetrisCanvas);
 		add(preview);
@@ -77,7 +78,7 @@ public class MyTetris extends JFrame{
 		musicTimer.start();
 	}
 	
-	public void createMenu(TetrisCanvas tetrisCanvas, TetrisNetworkCanvas netCanvas) {
+	public void createMenu(TetrisCanvas tetrisCanvas,TetrisPreview preview, TetrisNetworkCanvas netCanvas, TetrisNetworkPreview netPreview) {
 		JMenuBar mb = new JMenuBar();
 		setJMenuBar(mb);
 		JMenu gameMenu = new JMenu("게임");
@@ -176,18 +177,21 @@ public class MyTetris extends JFrame{
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        // 테마 설정 다이얼로그를 표시
-		        ThemeDialog themeDialog = new ThemeDialog(MyTetris.this);
+		        ThemeDialog themeDialog = new ThemeDialog(MyTetris.this, tetrisCanvas, preview, netCanvas, netPreview);
 		        themeDialog.setVisible(true);
 
 		        // 사용자가 테마를 설정하고 확인 버튼을 클릭한 경우, 색상을 가져와 테마를 변경
 		        if (themeDialog.getChoice() == ThemeDialog.Choice.OK) {
 		            Color backgroundColor = themeDialog.getBackgroundColor();
 		            Color shapeColor = themeDialog.getShapeColor();
+		            Color canvasColor = themeDialog.getcanvasColor();
 
 		            // TetrisCanvas의 배경색 및 도형 색상 설정
 		            tetrisCanvas.setBackground(backgroundColor);
 		           // tetrisCanvas.getNewBlock().setColor(shapeColor);
-
+		            preview.setBackground(backgroundColor);
+		            netCanvas.setBackground(backgroundColor);
+		            netPreview.setBackground(backgroundColor);
 		            // 여기에서 줄의 색상 및 다른 구성 요소의 테마 설정을 추가
 		            // 예: tetrisCanvas.getData().setLineColor(lineColor);
 

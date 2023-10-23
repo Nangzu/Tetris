@@ -60,8 +60,9 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	private Color ghostBlockColor = Color.gray; // 기본값은 회색
 	//private Color currentB = Constant.getColor(current.getType()); // 기본 도형 색
 	private ThemeDialog themeDialog;
-	private Color backgroundColor = Color.white;
+	private Color backgroundColor;
 	private Color shapeColor ;
+	private Color canvasColor;
 	
 	// 효과음
 	
@@ -188,20 +189,35 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	public void paint(Graphics g) {
 
 		//화면을 지운다. 지우지 않으면 이전그림이 그대로 남아 잔상이 생김
-//		bufferGraphics.setColor(backgroundColor);
-//		bufferGraphics.fillRect(0, 0, dim.width, dim.height);
-		bufferGraphics.clearRect(0,0,dim.width,dim.height); 
+		if(backgroundColor != null) {
+			bufferGraphics.setColor(backgroundColor);
+		} else {
+			bufferGraphics.setColor(new Color(238, 238, 238));
+		}
+		bufferGraphics.fillRect(0, 0, dim.width, dim.height);
+//		bufferGraphics.clearRect(0,0,dim.width,dim.height); 
 		
-		//쌓인 조각들 그리기
+		//쌓일 배경 선
 		for(int i = 0; i < TetrisData.ROW; i++) {
 			
 			for(int k = 0; k < TetrisData.COL; k++) {
 				if(data.getAt(i, k) == 0) {
-					bufferGraphics.setColor(Color.black/*Constant.getColor(data.getAt(i, k))*/);
+					if(canvasColor != null) {
+						bufferGraphics.setColor(canvasColor);
+					} else {
+						bufferGraphics.setColor(Color.black);
+					}
+					//bufferGraphics.setColor(Color.black/*Constant.getColor(data.getAt(i, k))*/);
 					bufferGraphics.draw3DRect(Constant.margin/2 + Constant.w * k,
 							Constant.margin/2 + Constant.w * i, Constant.w, Constant.w, true);
 				} else {
-					bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					
+					//bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					if(shapeColor != null) {
+						bufferGraphics.setColor(shapeColor);
+					} else {
+						bufferGraphics.setColor(Constant.getColor(data.getAt(i, k)));
+					}
 					bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * k, 
 							Constant.margin/2 + Constant.w * i, Constant.w, Constant.w, true);
 				}
@@ -219,12 +235,16 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		}
 		
 		
-		// 현재 내려오고 있는 테트리스 조각 그리
+		// 현재 내려오는 도형 그리기
 		if(current != null){
 			
 			for(int i = 0; i < 4; i++) {
 			//	shapeColor = Constant.getColor(current.getType());
-				bufferGraphics.setColor(Constant.getColor(current.getType()));
+				if(shapeColor != null) {
+					bufferGraphics.setColor(shapeColor);
+				} else {
+					bufferGraphics.setColor(Constant.getColor(current.getType()));
+				}
 				bufferGraphics.fill3DRect(Constant.margin/2 + Constant.w * (current.getX()+current.c[i]), 
 						Constant.margin/2 + Constant.w * (current.getY()+current.r[i]), 
 						Constant.w, Constant.w, true);
@@ -233,13 +253,28 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		
 		
 		
-		bufferGraphics.setColor(Color.black);
+		//bufferGraphics.setColor(Color.black);
+		if(canvasColor != null) {
+			bufferGraphics.setColor(canvasColor);
+		} else {
+			bufferGraphics.setColor(Color.black);
+		}
 		bufferGraphics.drawString("현재 점수 : " + data.score, 10, 525);
 		
-		bufferGraphics.setColor(Color.black);
+		//bufferGraphics.setColor(Color.black);
+		if(canvasColor != null) {
+			bufferGraphics.setColor(canvasColor);
+		} else {
+			bufferGraphics.setColor(Color.black);
+		}
 		bufferGraphics.drawString("지운 줄 : " + data.getLine(), 190, 525);
 		
-		bufferGraphics.setColor(Color.black);
+		//bufferGraphics.setColor(Color.black);
+		if(canvasColor != null) {
+			bufferGraphics.setColor(canvasColor);
+		} else {
+			bufferGraphics.setColor(Color.black);
+		}
 		bufferGraphics.drawString("난이도 : " + Constant.level+"/10", 190, 545);
 		
 		//가상버퍼(이미지)를 원본 버퍼에 복사
@@ -464,6 +499,11 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	    this.shapeColor = shapeColor;
 	    // 도형 색상을 설정한 후 다시 그리기 (repaint)
 	    repaint();
+	}
+	
+	public void setcanvasColor(Color canvasColor) {
+		this.canvasColor = canvasColor;
+		repaint();
 	}
 
 	@Override

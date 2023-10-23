@@ -1,4 +1,5 @@
 package Tetris1;
+import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -11,6 +12,10 @@ public class TetrisNetworkPreview extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private TetrisData data;
 	private Piece newBlock = null, save =null;
+	private ThemeDialog themeDialog;
+	private Color backgroundColor;
+	private Color shapeColor ;
+	private Color canvasColor;
 	public TetrisNetworkPreview(TetrisData data) {
 		this.data = data;
 		repaint();
@@ -73,5 +78,22 @@ public class TetrisNetworkPreview extends JPanel {
 			}
 		}
 		
+	}
+	
+	public void setBackgroundColor(Color backgroundColor) {
+	    this.backgroundColor = backgroundColor;
+	    // 배경색을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+
+	public void setShapeColor(Color shapeColor) {
+	    this.shapeColor = shapeColor;
+	    // 도형 색상을 설정한 후 다시 그리기 (repaint)
+	    repaint();
+	}
+	
+	public void setcanvasColor(Color canvasColor) {
+		this.canvasColor = canvasColor;
+		repaint();
 	}
 }
