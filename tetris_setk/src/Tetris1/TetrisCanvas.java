@@ -63,15 +63,16 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	private Color backgroundColor;
 	private Color shapeColor ;
 	private Color canvasColor;
-	
+//	private MyTetris myetris;
+	private SoundManager soundManager;
 	// 효과음
 	
-	public TetrisCanvas(MyTetris t) {
+	public TetrisCanvas(MyTetris t,SoundManager soundManager) {
 		this.myTetris = t;
 		data = new TetrisData();
 		addKeyListener(this);		
 		addComponentListener(this);
-
+		this.soundManager = soundManager;
 	}
 	
 		
@@ -178,12 +179,15 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	}
 
 	public void stop() {
+    	soundManager.setMusic("effect/gameOver.wav");
+    	soundManager.play();
 		stop = true;
 		current = null;
 		JOptionPane.showMessageDialog(this,"게임끝\n점수 : " + data.score);
 		data.score = 0;
 		levelreset();
 		resetLine();
+		soundManager.stop();
 	}
 	
 	public void paint(Graphics g) {
@@ -344,6 +348,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 					if(current.moveDown()){
 
 						makeNew = true;
+						myTetris.playSound();
 						if(current.copy()){
 							stop();
 //							int score = data.getLine() * 175 * Constant.level;
@@ -406,6 +411,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 			boolean temp = current.moveDown();
 			if(temp){
 				makeNew = true;
+				myTetris.playSound();
 				if(current.copy()){
 					stop();
 //					int score = data.getLine() * 175 * Constant.level;
@@ -413,6 +419,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 				//  아래 방향키를 눌렀을 때
 				current=null;
 				PieceGhost=null;
+				
 				data.removeLines(); // 아래 키 꾹 눌렀을 때 지워지지 않는 버그 수정
 				savePiece = true;
 				worker.interrupt();
@@ -438,9 +445,11 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 		}
 		//playSound();
 		makeNew = true;
+		myTetris.playSound();
 		if (current.copy()) {
 			stop();
 		}
+		
 		data.removeLines();
 		savePiece = true;
 		worker.interrupt();

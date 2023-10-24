@@ -1,4 +1,18 @@
 package Tetris1;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 public class TetrisData {
 	public static final int ROW = 20;
 	public static final int COL = 10;
@@ -7,11 +21,13 @@ public class TetrisData {
 	//private int grade;     // 단계
 	
 	public int score=0;
-	
+	private MyTetris myTetris;
 	
 	
 	
 	public TetrisData() {
+
+
 		data = new int[ROW][COL];
 		clear();
 	}
@@ -59,7 +75,7 @@ public class TetrisData {
 				i++; // 지워질 라인이 두줄 이상일때 맨 아랫줄 윗칸이 지워지지 않는 버그 수정
 				score+=100;
 				levelup();
-
+				crashsound();
 			}
 		}
 	}
@@ -120,6 +136,43 @@ public class TetrisData {
 		}
 		String result = output.toString();
 		return result;
+	}
+	
+	public void crashsound() {
+	    File bgm1;
+	    AudioInputStream stream1;
+	    AudioFormat format1;
+	    DataLine.Info info1;
+
+	    bgm1 = new File("effect/crashSound.wav");
+
+	    Clip clip;
+	    try {
+	        stream1 = AudioSystem.getAudioInputStream(bgm1);
+	        format1 = stream1.getFormat();
+	        info1 = new DataLine.Info(Clip.class, format1);
+	        clip = (Clip) AudioSystem.getLine(info1);
+
+	        clip.addLineListener(new LineListener() {
+	            @Override
+	            public void update(LineEvent event) {
+	                if (event.getType() == LineEvent.Type.STOP) {
+	                    event.getLine().close();
+	                }
+	            }
+	        });
+
+	        clip.open(stream1);
+	        clip.start();
+	    } catch (LineUnavailableException e) {
+	        System.out.println("LineUnavailableException: " + e.getMessage());
+	    } catch (UnsupportedAudioFileException e) {
+	        System.out.println("UnsupportedAudioFileException: " + e.getMessage());
+	    } catch (IOException e) {
+	        System.out.println("IOException: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("Error: " + e.getMessage());
+	    }
 	}
 	
 }
