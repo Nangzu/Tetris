@@ -137,7 +137,7 @@ public class MyTetris extends JFrame{
 				dialog.setVisible(true);
 				if(dialog.userChoice == ClientDialog.Choice.OK)
 				{
-					client = new TetrisClient(tetrisCanvas, netCanvas, netPreview, dialog.getHost(), dialog.getPortNumber());
+					client = new TetrisClient(tetrisCanvas, netCanvas,netPreview, dialog.getHost(), dialog.getPortNumber());
 					client.start();
 					clientItem.setEnabled(false);
 				}
