@@ -42,7 +42,7 @@ public class TetrisPreview extends JPanel {
 		} else {
 			g.setColor(new Color(238, 238, 238));
 		}
-		g.fillRect(0, 0, 270,1000 );
+		g.fillRect(0, 0, 3000,2000 );
 
 		//블럭 틀 그리기
 		for(int i = 0; i < 4; i++) {
@@ -66,7 +66,7 @@ public class TetrisPreview extends JPanel {
 		if(current != null){
 			for(int i = 0; i < 4; i++) {
 				if(shapeColor != null) {
-					g.setColor(shapeColor);
+				g.setColor(shapeColor);
 				} else {
 					g.setColor(Constant.getColor(current.getType()));
 				}
@@ -128,6 +128,13 @@ public class TetrisPreview extends JPanel {
 	public void setcanvasColor(Color canvasColor) {
 		this.canvasColor = canvasColor;
 		repaint();
+	}
+	public void resetTheme(Color backgroundColor,Color shapeColor, Color canvasColor) {
+	this.backgroundColor = null; // 배경색 초기화
+    this.shapeColor = null; // 도형 색상 초기화
+    this. canvasColor = null; // 선 색상 초기화
+    
+    repaint();
 	}
 
 }

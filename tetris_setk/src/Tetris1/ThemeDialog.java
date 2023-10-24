@@ -64,8 +64,8 @@ public class ThemeDialog extends JDialog {
                 backgroundColor = JColorChooser.showDialog(ThemeDialog.this, "배경색 선택", backgroundColor);
                 tetrisCanvas.setBackgroundColor(backgroundColor); // TetrisCanvas에 배경색 설정
                 tetrisPreview.setBackgroundColor(backgroundColor);
-                netCanvas.setBackground(backgroundColor);
-                netPreview.setBackground(backgroundColor);
+                netCanvas.setBackgroundColor(backgroundColor);
+                netPreview.setBackgroundColor(backgroundColor);
 
             }
         });
@@ -96,9 +96,21 @@ public class ThemeDialog extends JDialog {
             }
         });
 
+        // 초기화 버튼
+        JButton resetButton = new JButton("초기화");
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tetrisCanvas.resetTheme(backgroundColor,shapeColor,canvasColor); // TetrisCanvas의 테마 초기화
+                tetrisPreview.resetTheme(backgroundColor,shapeColor,canvasColor);
+                netCanvas.resetTheme(backgroundColor,shapeColor,canvasColor);
+                netPreview.resetTheme(backgroundColor,shapeColor,canvasColor);
+            }
+        });
+
         // 확인 및 취소 버튼
         JButton okButton = new JButton("확인");
-        JButton cancelButton = new JButton("취소");
+        JButton cancelButton = new JButton("닫기");
 
         okButton.addActionListener(new ActionListener() {
             @Override
@@ -120,8 +132,10 @@ public class ThemeDialog extends JDialog {
         add(backgroundColorButton);
         add(shapeColorButton);
         add(canvasColorButton);
+        add(resetButton);
         add(okButton);
         add(cancelButton);
+        
 
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

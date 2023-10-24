@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JColorChooser;
@@ -30,6 +32,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.Timer;
 
+//import javazoom.jl.decoder.JavaLayerException;
+//import javazoom.jl.player.Player;
+
 public class MyTetris extends JFrame{
 
 	/**
@@ -39,17 +44,21 @@ public class MyTetris extends JFrame{
 	private TetrisClient client = null;
 	private boolean isMusicPlaying = false;
 	private TetrisNetworkPreview netPreview = null;
+	private SoundManager soundManager;
+	private MyTetris myTetris;
+	private StartCanvas startCanvas;
 	
-	public MyTetris() {
+	
+	public MyTetris(SoundManager soundManager) {
 		setTitle("테트리스");
-		setSize(275*4, 650);
+		setSize(1280, 650);
 		
 		
-		
+		this.soundManager = soundManager;
 		
 		GridLayout layout = new GridLayout(1,4);
 		setLayout(layout);
-		TetrisCanvas tetrisCanvas = new TetrisCanvas(this);
+		TetrisCanvas tetrisCanvas = new TetrisCanvas(this,soundManager);
 		TetrisNetworkCanvas netCanvas = new TetrisNetworkCanvas();
 		
 		TetrisPreview preview = new TetrisPreview(tetrisCanvas.getData());
@@ -64,14 +73,14 @@ public class MyTetris extends JFrame{
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
+		//pack();
 		setVisible(true);
 		
 		Timer musicTimer = new Timer(30000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!isMusicPlaying) {
-					Music();
+					//Music();
 				}
 			}
 		});
@@ -91,7 +100,8 @@ public class MyTetris extends JFrame{
 		startItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Music();
+            	soundManager.setMusic("Music/bgm.wav");
+            	soundManager.play();
 				tetrisCanvas.start();
 				netCanvas.start();
 			}
@@ -101,8 +111,10 @@ public class MyTetris extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				tetrisCanvas.stop();
 				netCanvas.stop();
+
 			}
 		});
 		
@@ -152,6 +164,8 @@ public class MyTetris extends JFrame{
 		optionMenu.add(setGhostBlock);
 		JMenuItem setTheme = new JMenuItem("테트리스 테마 설정");
 		optionMenu.add(setTheme);
+		JMenuItem musicSet = new JMenuItem("음악 매니저");
+		optionMenu.add(musicSet);
 //		JMenuItem setBackgroundColorItem = new JMenuItem("배경색 설정");
 //		optionMenu.add(setBackgroundColorItem);
 //		JMenuItem setShapeColorItem = new JMenuItem("도형 색상 설정");
@@ -162,14 +176,22 @@ public class MyTetris extends JFrame{
 		setGhostBlock.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        // 사용자에게 색상을 선택하도록 다이얼로그 표시
-		        Color selectedColor = JColorChooser.showDialog(MyTetris.this, "고스트 블록 색상 선택", tetrisCanvas.getGhostBlockColor());
-
-		        // 사용자가 색상을 선택하지 않고 취소한 경우, 선택된 색상이 null이 될 수 있음
-		        if (selectedColor != null) {
-		            // 선택한 색상을 TetrisCanvas로 전달하여 설정
-		            tetrisCanvas.setGhostBlockColor(selectedColor);
-		        }
+		    	GhostDialog ghostDialog = new GhostDialog(MyTetris.this, tetrisCanvas);
+		    	ghostDialog.setVisible(true);
+		    	
+		    	if(ghostDialog.getChoice()==GhostDialog.Choice.OK) {
+		    		Color ghostBlockColor = ghostDialog.getGhostBlockColor();
+		    	}
+		    	
+		    	
+//		        // 사용자에게 색상을 선택하도록 다이얼로그 표시
+//		        Color selectedColor = JColorChooser.showDialog(MyTetris.this, "고스트 블록 색상 선택", tetrisCanvas.getGhostBlockColor());
+//
+//		        // 사용자가 색상을 선택하지 않고 취소한 경우, 선택된 색상이 null이 될 수 있음
+//		        if (selectedColor != null) {
+//		            // 선택한 색상을 TetrisCanvas로 전달하여 설정
+//		            tetrisCanvas.setGhostBlockColor(selectedColor);
+//		        }
 		    }
 		});
 		
@@ -200,6 +222,12 @@ public class MyTetris extends JFrame{
 		        }
 		    }
 		});
+		musicSet.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showSoundControlDialog();
+            }
+        });
 
 //		setBackgroundColorItem.addActionListener(new ActionListener() {
 //		    @Override
@@ -236,63 +264,28 @@ public class MyTetris extends JFrame{
 		
 		
 	}
-	public void Music() {
-		if(!isMusicPlaying) {
-			File bgm;
-			AudioInputStream stream;
-			AudioFormat format;
-			DataLine.Info info;
-			
-			bgm = new File("Music/bgmaa.wav");
-			
-			Clip clip;
-			try {
-				stream = AudioSystem.getAudioInputStream(bgm);
-				format = stream.getFormat();
-				info = new DataLine.Info(Clip.class, format);
-				clip =(Clip)AudioSystem.getLine(info);
-				
-				
-				clip.addLineListener(new LineListener() {
-					@Override
-					public void update(LineEvent event) {
-						if(event.getType() == LineEvent.Type.STOP) {
-							event.getLine().close();
-							Music();
-						}
-					}
-				});
-				
-				clip.open(stream);
-				clip.start();
-				isMusicPlaying = true;
-				} catch (LineUnavailableException e) {
-					System.out.println("LineUnavailableException: " + e.getMessage());
-				} catch (UnsupportedAudioFileException e) {
-					System.out.println("UnsupportedAudioFileException: " + e.getMessage());
-				} catch (IOException e) {
-					System.out.println("IOException: " + e.getMessage());
-				} catch (Exception e) {
-					System.out.println("Error: " + e.getMessage());
-					}
-			}
-	}
-	
-//	public void playSound() {
+    private void showSoundControlDialog() {
+    //    SoundManager soundManager = new SoundManager(); // Replace with your SoundManager instantiation code
+        SoundControlDialog soundControlDialog = new SoundControlDialog(this, soundManager, startCanvas);
+        soundControlDialog.pack();
+        soundControlDialog.setLocationRelativeTo(this);
+        soundControlDialog.setVisible(true);
+    }
+//	public void Music() {
 //		if(!isMusicPlaying) {
-//			File bgm1;
-//			AudioInputStream stream1;
-//			AudioFormat format1;
-//			DataLine.Info info1;
+//			File bgm;
+//			AudioInputStream stream;
+//			AudioFormat format;
+//			DataLine.Info info;
 //			
-//			bgm1 = new File("effect/bottom.wav");
+//			bgm = new File("Music/bgm.wav");
 //			
 //			Clip clip;
 //			try {
-//				stream1 = AudioSystem.getAudioInputStream(bgm1);
-//				format1 = stream1.getFormat();
-//				info1 = new DataLine.Info(Clip.class, format1);
-//				clip =(Clip)AudioSystem.getLine(info1);
+//				stream = AudioSystem.getAudioInputStream(bgm);
+//				format = stream.getFormat();
+//				info = new DataLine.Info(Clip.class, format);
+//				clip =(Clip)AudioSystem.getLine(info);
 //				
 //				
 //				clip.addLineListener(new LineListener() {
@@ -300,12 +293,12 @@ public class MyTetris extends JFrame{
 //					public void update(LineEvent event) {
 //						if(event.getType() == LineEvent.Type.STOP) {
 //							event.getLine().close();
-//							playSound();
+//							Music();
 //						}
 //					}
 //				});
 //				
-//				clip.open(stream1);
+//				clip.open(stream);
 //				clip.start();
 //				isMusicPlaying = true;
 //				} catch (LineUnavailableException e) {
@@ -320,14 +313,57 @@ public class MyTetris extends JFrame{
 //			}
 //	}
 	
+	public void playSound() {
+	    File bgm1;
+	    AudioInputStream stream1;
+	    AudioFormat format1;
+	    DataLine.Info info1;
+
+	    bgm1 = new File("effect/bottom.wav");
+
+	    Clip clip;
+	    try {
+	        stream1 = AudioSystem.getAudioInputStream(bgm1);
+	        format1 = stream1.getFormat();
+	        info1 = new DataLine.Info(Clip.class, format1);
+	        clip = (Clip) AudioSystem.getLine(info1);
+
+	        clip.addLineListener(new LineListener() {
+	            @Override
+	            public void update(LineEvent event) {
+	                if (event.getType() == LineEvent.Type.STOP) {
+	                    event.getLine().close();
+	                }
+	            }
+	        });
+
+	        clip.open(stream1);
+	        clip.start();
+	    } catch (LineUnavailableException e) {
+	        System.out.println("LineUnavailableException: " + e.getMessage());
+	    } catch (UnsupportedAudioFileException e) {
+	        System.out.println("UnsupportedAudioFileException: " + e.getMessage());
+	    } catch (IOException e) {
+	        System.out.println("IOException: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("Error: " + e.getMessage());
+	    }
+	    
+	    
+	}	
+
+	
+
+	
+	
 
 	
 
 
 	
-	public static void main(String[] args) {
-		new MyTetris();
-	}
+//	public static void main(String[] args) {
+//		new MyTetris();
+//	}
 
 	public void refresh() {
 		if(client != null)

@@ -183,6 +183,14 @@ public class TetrisNetworkCanvas extends JPanel implements Runnable, ComponentLi
 		this.canvasColor = canvasColor;
 		repaint();
 	}
+
+	public void resetTheme(Color backgroundColor,Color shapeColor, Color canvasColor) {
+	this.backgroundColor = null; // 배경색 초기화
+    this.shapeColor = null; // 도형 색상 초기화
+    this. canvasColor = null; // 선 색상 초기화
+    
+    repaint();
+	}
 	
 	@Override
 	public void componentMoved(ComponentEvent e) {}
