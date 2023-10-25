@@ -70,7 +70,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 	public TetrisCanvas(MyTetris t,SoundManager soundManager) {
 		this.myTetris = t;
 		data = new TetrisData();
-		addKeyListener(this);		
+		addKeyListener(this);		 
 		addComponentListener(this);
 		this.soundManager = soundManager;
 	}

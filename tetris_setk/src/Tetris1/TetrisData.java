@@ -84,7 +84,7 @@ public class TetrisData {
 		return grade;
 	}*/
 	public void levelup() { // 최대 10레벨까지
-		if(Constant.getLevel()<11) {
+		if(Constant.getLevel()<10) {
 			if(score % 100 ==0) {
 				Constant.increaseLevel(1);
 				//grade ++;
