@@ -362,7 +362,7 @@ public class TetrisCanvas extends JPanel implements Runnable, KeyListener, Compo
 					} else {
 						//화면 밖으로 나가지 않도록 체크
 						if(isOutOfScreen(current)) {
-							current.moveDown(); //조각 이전위치로 이동
+							current.moveDown(); //조각 이전위치로 이동 
 						}
 					}
 					
